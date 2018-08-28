@@ -1,5 +1,5 @@
 {
-  "name": "spins",
+  "name": "spintext",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,5 +17,13 @@
     "pump": "^3.0.0",
     "typescript": "^3.0.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hallojoe/SpinText.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hallojoe/SpinText/issues"
+  },
+  "homepage": "https://github.com/hallojoe/SpinText#readme"
 }
