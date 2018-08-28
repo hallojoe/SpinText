@@ -1,10 +1,11 @@
 ﻿module SpinText {
 
   export class Random {
+
     private _seedStart: number;
     private _seed: number;
-
-    constructor(seed: number) {
+    
+    constructor(seed: number = -1) {
       this._seedStart = seed;
       if (this._seedStart <= 0) 
          this._seedStart = Math.floor(Math.random() * 99999) + 11111;
@@ -23,12 +24,5 @@
       return result;
     }
 
-    public nextDouble(): number {
-      return this.next(0, 1);
-    }
-
-    public pick(collection: any[]): any {
-      return collection[this.nextInt(0, collection.length - 1)];
-    }
   }
 }

@@ -8,7 +8,7 @@
     constructor(rnd: Random, level : number = 0) {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
-      this._rnd = rnd != null ? rnd : new Random(1000);
+      this._rnd = rnd != null ? rnd : new Random(-1);
       this._level = level;
     }
 

@@ -4,9 +4,11 @@
 
     private _part: ITextPart;
     private _rnd: Random;
+    private _cfg: ParserConfig;
 
     constructor(text: string, config: ParserConfig) {
       this._part = Engine.ParsePart(text, 0, text.length, config);
+      this._cfg = config;
     }
 
     private static ParsePart(
@@ -15,7 +17,8 @@
       endIdx: number,
       config: ParserConfig = new ParserConfig(-1)): ITextPart
     {      
-
+      if(config.seed <= 0) 
+        config.reSeed();
       var at: AlternatedText = new AlternatedText(config.random),
         ct: ConcatenetedText = new ConcatenetedText(),
         part: string = null;
