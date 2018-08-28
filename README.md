@@ -19,3 +19,9 @@ Try Above example on [plnkr](http://plnkr.co/edit/qhuIap?p=preview)
 
 ## Try
 A demo can be found [here](https://hallojoe.github.io/SpinText/)
+
+## Notes
+
+ - 1.0.1 - Initial commit.
+ - 1.0.2 - Fix issue with random/seed not beeing set properly.
+ 
