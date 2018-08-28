@@ -1,0 +1,28 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": { 
+      "module": "system", 
+      "lib": ["dom", "es6"],
+      "noImplicitAny": false,
+      "noEmitOnError": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "target": "es5", 
+      "outFile": "dist/build.js"
+    },
+    "files": [
+      "src/StringBuilder.ts", 
+      "src/Random.ts", 
+      "src/TextHelper.ts", 
+      "src/ITextPart.ts", 
+      "src/ParserConfig.ts", 
+      "src/ConcatenatedText.ts", 
+      "src/SimpleText.ts", 
+      "src/AlternateText.ts", 
+      "src/Engine.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }
+  
