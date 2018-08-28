@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>SpinText Tool</title>
-  <script src="https://rawgit.com/hallojoe/SpinText/master/dist/build.js"></script>
+  <!-- <script src="https://rawgit.com/hallojoe/SpinText/master/dist/build.js"></script> -->
+  <script src="/dist/build.js"></script>
+
   <style>
   :root {
     --font-size: 16px; 
@@ -173,6 +175,8 @@
         var outputText = '';
         try {
           engine = new SpinText.Engine(text);
+          // var seed = 1000;
+          // engine = new SpinText.Engine(text, new SpinText.ParserConfig(seed));
           outputText = engine.toString();
           elementOutput.innerHTML = format(outputText);
           var v = engine.countVariants();

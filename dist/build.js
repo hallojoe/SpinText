@@ -38,6 +38,7 @@ var SpinText;
 (function (SpinText) {
     var Random = /** @class */ (function () {
         function Random(seed) {
+            if (seed === void 0) { seed = -1; }
             this._seedStart = seed;
             if (this._seedStart <= 0)
                 this._seedStart = Math.floor(Math.random() * 99999) + 11111;
@@ -54,12 +55,6 @@ var SpinText;
         Random.prototype.nextInt = function (min, max) {
             var result = Math.floor(this.next(min, max)); // changed round to floor
             return result;
-        };
-        Random.prototype.nextDouble = function () {
-            return this.next(0, 1);
-        };
-        Random.prototype.pick = function (collection) {
-            return collection[this.nextInt(0, collection.length - 1)];
         };
         return Random;
     }());
@@ -107,14 +102,11 @@ var SpinText;
             this.opening = '{';
             this.closing = '}';
             this.delimiter = '|';
-            if (seed <= 0)
-                this.reSeed();
-            else
-                this._seed = seed;
-            this.random = new SpinText.Random(this._seed);
+            this.seed = seed;
+            this.random = new SpinText.Random(this.seed);
         }
         ParserConfig.prototype.reSeed = function () {
-            this._seed = Math.floor(Math.random() * 99999) + 11111;
+            this.random = new SpinText.Random();
         };
         return ParserConfig;
     }());
@@ -211,7 +203,7 @@ var SpinText;
             if (level === void 0) { level = 0; }
             var _this = _super.call(this) || this;
             Object.setPrototypeOf(_this, _newTarget.prototype);
-            _this._rnd = rnd != null ? rnd : new SpinText.Random(1000);
+            _this._rnd = rnd != null ? rnd : new SpinText.Random(-1);
             _this._level = level;
             return _this;
         }
@@ -273,9 +265,12 @@ var SpinText;
     var Engine = /** @class */ (function () {
         function Engine(text, config) {
             this._part = Engine.ParsePart(text, 0, text.length, config);
+            this._cfg = config;
         }
         Engine.ParsePart = function (text, startIdx, endIdx, config) {
             if (config === void 0) { config = new SpinText.ParserConfig(-1); }
+            if (config.seed <= 0)
+                config.reSeed();
             var at = new SpinText.AlternatedText(config.random), ct = new SpinText.ConcatenetedText(), part = null;
             var balance = 0, // amount of unmatched opening brackets      
             i = 0, // index of current char      
