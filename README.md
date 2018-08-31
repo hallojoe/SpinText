@@ -3,7 +3,7 @@ A tool for generating text from word chains(optionally nested). Source is a refa
 
 ## Install
 
-`npm intall spintext --save`
+`npm install spintext --save`
 
 ## Use
     var text = "{This is|It's} {Spin|Spin-text|Spin text}. {Enjoy!| You love it!}"
