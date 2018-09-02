@@ -164,11 +164,18 @@ var SpinText;
 })(SpinText || (SpinText = {}));
 var SpinText;
 (function (SpinText) {
+    /**
+     * A textpart
+     */
     var SimpleText = /** @class */ (function () {
         function SimpleText(text) {
             this._wordsCount = -1;
             this._text = text;
+            this._children = [];
         }
+        SimpleText.prototype.children = function () {
+            return this._children;
+        };
         SimpleText.prototype.WordsCount = function () {
             return (this._wordsCount == -1) ? SpinText.TextHelper.WordsCount(this._text) : this._wordsCount;
         };
@@ -177,6 +184,12 @@ var SpinText;
         };
         SimpleText.prototype.toStructuredString = function () {
             return this._text;
+        };
+        SimpleText.prototype.toArray = function () {
+            return [this];
+        };
+        SimpleText.prototype.count = function () {
+            return 1;
         };
         SimpleText.prototype.countVariants = function () {
             return 1;
@@ -188,7 +201,7 @@ var SpinText;
             return this.WordsCount();
         };
         SimpleText.Empty = function () {
-            return new SimpleText("");
+            return new SimpleText('');
         };
         return SimpleText;
     }());
@@ -274,14 +287,18 @@ var SpinText;
             var at = new SpinText.AlternatedText(config.random), ct = new SpinText.ConcatenetedText(), part = null;
             var balance = 0, // amount of unmatched opening brackets      
             i = 0, // index of current char      
-            opnIdx = -1; // position of the opening bracket
+            opnIdx = -1, // position of the opening bracket
+            lastOpeningIdx = 0, // last seen opening position
+            lastClosingIdx = 0; // last seen closing position
             for (i = startIdx; i <= endIdx - 1; i++) {
                 // opening
                 // =======
                 if (text[i] === config.opening) {
+                    lastOpeningIdx = i;
                     if (balance == 0) {
                         part = text.substr(startIdx, i - startIdx);
                         if (part !== null && part !== "")
+                            // ct.push(new SimpleText(part));
                             ct.push(new SpinText.SimpleText(part));
                         startIdx = i + 1;
                         opnIdx = i;
@@ -292,6 +309,8 @@ var SpinText;
                 // =========
                 else if (text[i] === config.delimiter && balance === 0) {
                     part = text.substr(startIdx, i - startIdx);
+                    // ct.push(new SimpleText(part));  // no check for empty string - by design
+                    // at.push(ct); // add to alternatives
                     ct.push(new SpinText.SimpleText(part)); // no check for empty string - by design
                     at.push(ct); // add to alternatives
                     ct = new SpinText.ConcatenetedText();
@@ -300,30 +319,55 @@ var SpinText;
                 // closing
                 // =======
                 else if (text[i] === config.closing) {
+                    lastClosingIdx = i;
                     balance -= 1;
                     if (balance === 0) {
                         var innerPart = Engine.ParsePart(text, opnIdx + 1, i, config);
+                        // ct.push(innerPart);
                         ct.push(innerPart);
                         opnIdx = -1;
                         startIdx = i + 1;
                     }
-                    else if (balance < 0)
-                        throw "Unexpected " + config.closing + " at position " + i.toString();
+                    else if (balance < 0) {
+                        throw "Unexpected " + config.closing + " at position " + i + ".";
+                        // console.log('balance < 0:balance:i:opnIdx:startIdx:lastOpeningIdx: ', balance, i, opnIdx, startIdx,lastOpeningIdx);
+                        // throw {
+                        //   missing: '}',
+                        //   message: ,
+                        //   block: text.substring(lastOpeningIdx -1, lastClosingIdx+1),
+                        //   index: i,
+                        //   lastOpen: lastOpeningIdx,
+                        //   lastEnd: lastClosingIdx
+                        // };
+                    }
                 }
             }
-            // if positive balance then trow exception
-            // =======================================
-            if (balance > 0)
-                throw config.opening + " at position " + opnIdx + " is unmatched";
             // get part
             // ========
             part = text.substr(startIdx, i - startIdx);
+            // if positive balance then trow exception
+            // =======================================
+            if (balance > 0)
+                throw "Unexpected " + config.opening + " at position " + opnIdx + ".";
+            // throw {
+            //   missing: '}',
+            //   message: `Unexpected ${config.opening} at position ${opnIdx}.`,
+            //   block: part,
+            //   index: i,
+            //   lastOpen: lastOpeningIdx,
+            //   lastStart: lastClosingIdx
+            // };
             // add part to ConcatenatedText
             // ============================
+            // if (part !== null && part !== "")
+            //   ct.push(new SimpleText(part));
             if (part !== null && part !== "")
                 ct.push(new SpinText.SimpleText(part));
             // were there alternatives ?
             // =========================
+            // if (at.length === 0)
+            //   return ct;      // return ConcatenatedText
+            // else at.push(ct);     // push 
             if (at.length === 0)
                 return ct; // return ConcatenatedText
             else
@@ -337,6 +381,9 @@ var SpinText;
         };
         Engine.prototype.toStructuredString = function () {
             return this._part.toStructuredString();
+        };
+        Engine.prototype.toArray = function () {
+            return this._part;
         };
         Engine.prototype.countVariants = function () {
             return this._part.countVariants();
