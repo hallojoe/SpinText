@@ -28,8 +28,7 @@
         i: number = 0,      // index of current char      
         opnIdx: number = -1;  // position of the opening bracket
 
-      for (i = startIdx; i <= endIdx - 1; i++)
-      {
+      for (i = startIdx; i <= endIdx - 1; i++) {
 
         // opening
         // =======
@@ -38,7 +37,7 @@
             part = text.substr(startIdx, i - startIdx);
             if (part !== null && part !== "")
               ct.push(new SimpleText(part));
-            startIdx = i + 1;
+              startIdx = i + 1;
             opnIdx = i;
           }
           balance += 1;
@@ -50,6 +49,7 @@
           part = text.substr(startIdx, i - startIdx);
           ct.push(new SimpleText(part));  // no check for empty string - by design
           at.push(ct); // add to alternatives
+
           ct = new ConcatenetedText();
           startIdx = i + 1;
         }
@@ -64,20 +64,20 @@
             opnIdx = -1;
             startIdx = i + 1;
           }
-          else if (balance < 0)
-            throw "Unexpected " + config.closing + " at position " + i.toString();
+          else if (balance < 0) {
+              throw `Unexpected ${config.closing} at position ${i}.`;
+          }
         }
       }
-
-      // if positive balance then trow exception
-      // =======================================
-      if (balance > 0) 
-        throw config.opening + " at position " + opnIdx + " is unmatched";
 
       // get part
       // ========
       part = text.substr(startIdx, i - startIdx);
 
+      // if positive balance then trow exception
+      // =======================================
+      if (balance > 0) 
+        throw `Unexpected ${config.opening} at position ${opnIdx}.`;     
       // add part to ConcatenatedText
       // ============================
       if (part !== null && part !== "")
@@ -102,6 +102,10 @@
       return this._part.toStructuredString();
     }
 
+    public toArray(): any {
+      return this._part;
+    }
+
     public countVariants(): number {
       return this._part.countVariants();
     }    
@@ -114,8 +118,7 @@
       return this._part.countMaxWords();
     }
 
-    public static Spin(text: string = '', config: ParserConfig = new ParserConfig(-1)): string
-    {
+    public static Spin(text: string = '', config: ParserConfig = new ParserConfig(-1)): string {
       if(text === '')
         text = "{This is|It's} {Spin|Spin-text|Spin text}. {Enjoy!| You love it!}";
       return new Engine(text, config).toString(); 
