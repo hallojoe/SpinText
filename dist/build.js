@@ -287,18 +287,14 @@ var SpinText;
             var at = new SpinText.AlternatedText(config.random), ct = new SpinText.ConcatenetedText(), part = null;
             var balance = 0, // amount of unmatched opening brackets      
             i = 0, // index of current char      
-            opnIdx = -1, // position of the opening bracket
-            lastOpeningIdx = 0, // last seen opening position
-            lastClosingIdx = 0; // last seen closing position
+            opnIdx = -1; // position of the opening bracket
             for (i = startIdx; i <= endIdx - 1; i++) {
                 // opening
                 // =======
                 if (text[i] === config.opening) {
-                    lastOpeningIdx = i;
                     if (balance == 0) {
                         part = text.substr(startIdx, i - startIdx);
                         if (part !== null && part !== "")
-                            // ct.push(new SimpleText(part));
                             ct.push(new SpinText.SimpleText(part));
                         startIdx = i + 1;
                         opnIdx = i;
@@ -309,8 +305,6 @@ var SpinText;
                 // =========
                 else if (text[i] === config.delimiter && balance === 0) {
                     part = text.substr(startIdx, i - startIdx);
-                    // ct.push(new SimpleText(part));  // no check for empty string - by design
-                    // at.push(ct); // add to alternatives
                     ct.push(new SpinText.SimpleText(part)); // no check for empty string - by design
                     at.push(ct); // add to alternatives
                     ct = new SpinText.ConcatenetedText();
@@ -319,26 +313,15 @@ var SpinText;
                 // closing
                 // =======
                 else if (text[i] === config.closing) {
-                    lastClosingIdx = i;
                     balance -= 1;
                     if (balance === 0) {
                         var innerPart = Engine.ParsePart(text, opnIdx + 1, i, config);
-                        // ct.push(innerPart);
                         ct.push(innerPart);
                         opnIdx = -1;
                         startIdx = i + 1;
                     }
                     else if (balance < 0) {
                         throw "Unexpected " + config.closing + " at position " + i + ".";
-                        // console.log('balance < 0:balance:i:opnIdx:startIdx:lastOpeningIdx: ', balance, i, opnIdx, startIdx,lastOpeningIdx);
-                        // throw {
-                        //   missing: '}',
-                        //   message: ,
-                        //   block: text.substring(lastOpeningIdx -1, lastClosingIdx+1),
-                        //   index: i,
-                        //   lastOpen: lastOpeningIdx,
-                        //   lastEnd: lastClosingIdx
-                        // };
                     }
                 }
             }
@@ -349,25 +332,12 @@ var SpinText;
             // =======================================
             if (balance > 0)
                 throw "Unexpected " + config.opening + " at position " + opnIdx + ".";
-            // throw {
-            //   missing: '}',
-            //   message: `Unexpected ${config.opening} at position ${opnIdx}.`,
-            //   block: part,
-            //   index: i,
-            //   lastOpen: lastOpeningIdx,
-            //   lastStart: lastClosingIdx
-            // };
             // add part to ConcatenatedText
             // ============================
-            // if (part !== null && part !== "")
-            //   ct.push(new SimpleText(part));
             if (part !== null && part !== "")
                 ct.push(new SpinText.SimpleText(part));
             // were there alternatives ?
             // =========================
-            // if (at.length === 0)
-            //   return ct;      // return ConcatenatedText
-            // else at.push(ct);     // push 
             if (at.length === 0)
                 return ct; // return ConcatenatedText
             else
