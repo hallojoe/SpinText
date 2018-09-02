@@ -4,209 +4,54 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>SpinText Tool</title>
-  <script src="https://rawgit.com/hallojoe/SpinText/master/dist/build.js"></script>
+  <!-- <script src="https://rawgit.com/hallojoe/SpinText/master/dist/build.js"></script> -->
   <script src="/dist/build.js"></script>
-
-  <style>
-  :root {
-    --font-size: 16px; 
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    --font-family-editor: 'Consolas', 'Courier New', Courier, monospace;    
-  }
-  html, body {
-    margin: 0;
-    padding:0;
-    font-size: var(--font-size);
-    font-family: var(--font-family);
-  }
-  * {
-    box-sizing: border-box;
-  }
-  .container {
-    display: flex;
-    height: 100vh;
-  } 
-  .options {
-    width: 20%;    
-    padding: 2%;
-    overflow: hidden;
-  }  
-  .properties {
-    display: flex;
-    justify-content: space-between;
-  }
-  .editor {
-    width: 80%;
-    background: #f0f0f0;
-    font-size: 1.2em;
-    flex: 1 1 auto;
-    overflow: auto;
-  }  
-  .input {
-    max-width: 100%;
-    height: calc(50vh - 2em);
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin:1em;
-    background: #fff;
-    font-family: var(--font-family-editor);
-  }  
-
-  .output {
-    height: calc(50vh - 2em);
-    overflow: scroll;
-    margin:1em;
-    background: #fff;
-  }  
-  .preview {
-    height: 50vh;
-    overflow:auto;
-    background: #f0f0f0;
-    overflow: auto;
-    font-family: var(--font-family-editor);
-  }  
-  
-
-  </style>
+  <link rel="stylesheet" href="/assets/demo.css">
 </head>
 <body>
 
-  <div class="container">
-    <div class="editor">
-      <div id="input" contenteditable="true" class="input">{This is|It's} {Spin|Spin-text|Spin text}. {Enjoy!| You love it!}</div>      
+  <div class="layout">
+
+    <div class="main">
+      <div class="container-editor">
+        <div class="backdrop">
+          <div class="highlights"></div>
+        </div>
+        <textarea id="input" class="editarea">{Lån penge|Få et lån|Tag et lån|Få et forbrugslån|Tag et forbrugslån} {online|billigt|på nettet|på internettet} {uden sikkerhed|trods RKI|nemt og hurtigt|hurtigt og let}|Vil du låne penge {billigt|på gode vilkår|online} {uden sikkerhed|trods RKI|nemt og hurtigt|hurtigt og let}?|Lån penge {trods RKI|billigt|nemt og hurtigt|hurtigt og let} {uden at stille sikkerhed|på nettet|på internettet}|{Opfyld|Få opfyldt|Realiser} dine {drømme|ønsker} ved at låne penge {online|på nettet|udenom banken|på internettet}</textarea>
+      </div>
       <div id="output" class="output"></div>
     </div>
 
-    <div class="options">
+    <div class="side">
       <h2>Input properties</h2>
       <div class="properties">
         <span>Min. words:</span> 
-        <span id="minwords"></span>      
+        <span id="minwords">-</span>      
       </div>
       <div class="properties">
-        Max. words: <span id="maxwords"></span>      
+        Max. words: <span id="maxwords">-</span>      
       </div>
       <div class="properties">
-        Variations: <span id="variations"></span>            
+        Variations: <span id="variations">-</span>            
       </div>
       <h2>Output properties</h2>
       <div class="properties">
-        Sentences: <span id="sentences"></span>            
+        Sentences: <span id="sentences">-</span>            
       </div>  
       <div class="properties">
-        Words: <span id="words"></span>            
+        Words: <span id="words">-</span>            
       </div>    
       <div class="properties">
-        Chars: <span id="chars"></span>      
+        Chars: <span id="chars">-</span>      
       </div>
       <h2>Editor properties</h2>
       <div class="properties">
-        Caret: <span id="caret">0</span>      
+        Caret: <span id="caret">-</span>      
       </div>
       
     </div>
-  </div>
-  
-  <script>
-      var elementInput = document.getElementById('input');
-      var elementOutput = document.getElementById('output');
-      var elementMinWords = document.getElementById('minwords');
-      var elementMaxWords = document.getElementById('maxwords');
-      var elementVariations = document.getElementById('variations');
-      var elementSentences = document.getElementById('sentences');
-      var elementWords = document.getElementById('words');
-      var elementChars = document.getElementById('chars');
-      var elementCaret = document.getElementById('caret');
-  
-      var text = '';
-      var engine = null;
-
-      var countSentences = function(s) {
-        return s.match(/.+?(?:(?<![\s.]\p{Lu})[.!?]|$)/g).length; 
-      }
-  
-      var countWords = function(s) {
-        return s.match(/[\S]+/g).length; 
-      }
-
-      var countChars = function(s) {
-        return s.length; 
-      }
-      
-      var getCaretPosition = function() {
-        var n = -1;
-        if(window.getSelection && window.getSelection().rangeCount > 0)
-          n = window.getSelection().getRangeAt(0).cloneRange().startOffset;
-        return n;
-      }
-      
-      var setCaretPosition = function(pos) {
-        var range = document.createRange();
-        var sel = window.getSelection();
-        range.setStart(elementInput.childNodes[0], pos);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        elementInput.focus();        
-      }
-
-      var readCaretPositionFromError = function(s) {
-        return s.match(/\d{1,6}/g);
-      }
-    
-      var showErrorToken = -1;
-      var showError = function(s) {
-        if(showTokenError > -1)
-          clearTimeout(showErrorToken);
-        else
-          showErrorToken = setTimeout(function() {
-          }, 3000);
-      }
-
-      var format = function (s) {
-        s = s.replace(/\n/g, '</p><p>');
-        s = '<p>' + s + '</p>';
-        s = s.replace('<p></p>', '');
-        return s;
-      }
-
-      var execute = function() {
-        text = elementInput.innerText;
-        var outputText = '';
-        try {
-          engine = new SpinText.Engine(text);
-          // var seed = 1000;
-          // engine = new SpinText.Engine(text, new SpinText.ParserConfig(seed));
-          outputText = engine.toString();
-          elementOutput.innerHTML = format(outputText);
-          var v = engine.countVariants();
-          elementVariations.innerText = v > 99999 ? '+' + v : v;
-          elementMinWords.innerText = engine.countMinWords();
-          elementMaxWords.innerText = engine.countMaxWords();
-          elementSentences.innerText = countSentences(outputText);
-          elementWords.innerText = countWords(outputText);
-          elementChars.innerText = countChars(outputText);
-        } catch(ex) {
-          setCaretPosition(readCaretPositionFromError(ex));
-          elementCaret.innerText = getCaretPosition();
-        }
-      }
-
-      elementInput.addEventListener('keyup', function(e) {
-        execute();
-        elementCaret.innerText = getCaretPosition();
-      }, true);
-
-      elementInput.addEventListener('mouseup', function(e) {
-        execute();
-        elementCaret.innerText = getCaretPosition();
-      }, true);
-
-      elementInput.addEventListener('focus', function(e) {
-        execute();
-        elementCaret.innerText = getCaretPosition();
-      }, true);
-
-    </script>
+  </div>  
+  <!-- <script src="/assets/markedarea.js"></script> -->
+  <script src="/assets/demo.js"></script>
   </body>
 </html>
