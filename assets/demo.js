@@ -22,7 +22,8 @@ var elementChars = document.getElementById('chars');
 var elementCaret = document.getElementById('caret');
 
 var countSentences = function(s) {
-  var m = s.match(/([^\.!\?]+[\.!\?]+)|([^\.!\?]+$)/g);
+  //var m = s.match(/([^\.!\?]+[\.!\?]+)|([^\.!\?]+$)/g);
+  var m = s.match(/\b((?!=|\.).)+(.)\b/g);
   if(m !== null)
     return m.length;
   return 0;
