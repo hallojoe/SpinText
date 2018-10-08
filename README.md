@@ -15,8 +15,6 @@ A tool for generating text from word chains(optionally nested). Source is a refa
 
     console.log('Text result', engine.toString());
 
-Try Above example on [plnkr](http://plnkr.co/edit/qhuIap?p=preview)
-
 ## Try
 A demo can be found [here](https://hallojoe.github.io/SpinText/)
 
