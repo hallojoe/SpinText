@@ -1,27 +1,24 @@
-﻿module SpinText {
+﻿export class StringBuilder {
 
-  export class StringBuilder {
+  private _strings : Array<string>;
 
-    private _strings : Array<string>;
+  constructor(value: string = "")
+  {
+    this._strings = new Array<string>();
+    this.append(value);
+  }
 
-    constructor(value: string = "")
-    {
-      this._strings = new Array<string>();
-      this.append(value);
-    }
+  public append (value: string): void {
+    if (value) 
+      this._strings.push(value);
+  }
 
-    public append (value: string): void {
-      if (value) 
-        this._strings.push(value);
-    }
+  public clear (): void {
+    this._strings = new Array<string>();
+  }
 
-    public clear (): void {
-      this._strings = new Array<string>();
-    }
-
-    public toString (): string {
-      var result = this._strings.join("");
-      return result;
-    }
+  public toString (): string {
+    var result = this._strings.join("");
+    return result;
   }
 }
