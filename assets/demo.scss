@@ -101,13 +101,25 @@ textarea:focus, button:focus {
         background-color: red!important;
       }
       &>mark {
-        background-color: lighten($mark-color, 70%)!important;
+        background-color: lighten($mark-color, 80%)!important;
         &>mark {
-          background-color: lighten($mark-color, 60%)!important;
+          background-color: lighten($mark-color, 70%)!important;
           &>mark {
-            background-color: lighten($mark-color, 50%)!important;
+            background-color: lighten($mark-color, 60%)!important;
             &>mark {
-              background-color: lighten($mark-color, 40%)!important;
+              background-color: lighten($mark-color, 50%)!important;
+              &>mark {
+                background-color: lighten($mark-color, 40%)!important;
+                &>mark {
+                  background-color: lighten($mark-color, 30%)!important;
+                  &>mark {
+                    background-color: lighten($mark-color, 20%)!important;
+                    &>mark {
+                      background-color: lighten($mark-color, 10%)!important;
+                    }              
+                  }            
+                }          
+              }      
             }      
           }    
         }  

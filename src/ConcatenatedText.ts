@@ -5,7 +5,6 @@ export class ConcatenatedText extends Array<ITextPart> implements ITextPart {
   constructor() {
     super();
     Object.setPrototypeOf(this, new.target.prototype);
-
   }
 
   toString(): string {

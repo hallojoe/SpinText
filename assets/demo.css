@@ -1,99 +1,137 @@
 :root {
   --font-size: 16px;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --font-family-editor: 'Consolas', 'Courier New', Courier, monospace; }
+  --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-editor: "Consolas", "Courier New", Courier, monospace;
+}
 
 html, body {
   margin: 0;
   padding: 0;
   font-size: var(--font-size);
-  font-family: var(--font-family); }
+  font-family: var(--font-family);
+}
 
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 textarea:focus, button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #c6aada; }
+  box-shadow: 0 0 0 2px #c6aada;
+}
 
 @keyframes blink {
   from {
-    opacity: 0; }
+    opacity: 0;
+  }
   to {
-    opacity: 1; } }
-
+    opacity: 1;
+  }
+}
 .layout {
   margin: 0;
   padding: 0;
-  display: block; }
-  .layout::after {
-    content: '';
-    display: block;
-    clear: both; }
-  .layout .main {
-    width: 80%;
-    min-height: 100vh;
-    float: left;
-    background-color: #b1d5e5; }
-  .layout .side {
-    width: 20%;
-    min-height: 100vh;
-    float: left;
-    padding: 1em;
-    overflow: hidden;
-    background-color: #74637f; }
-    .layout .side .properties {
-      display: flex;
-      justify-content: space-between; }
+  display: block;
+}
+.layout::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.layout .main {
+  width: 80%;
+  min-height: 100vh;
+  float: left;
+  background-color: #b1d5e5;
+}
+.layout .side {
+  width: 20%;
+  min-height: 100vh;
+  float: left;
+  padding: 1em;
+  overflow: hidden;
+  background-color: #74637f;
+}
+.layout .side .properties {
+  display: flex;
+  justify-content: space-between;
+}
 
 .container-editor {
-  position: relative; }
-  .container-editor, .container-editor .backdrop, .container-editor .editarea {
-    font-family: var(--font-family-editor);
-    width: 100%;
-    height: 480px; }
-  .container-editor .backdrop {
-    position: absolute;
-    z-index: 2;
-    background-color: #fff;
-    overflow: auto;
-    white-space: normal;
-    pointer-events: none; }
-  .container-editor .highlights, .container-editor .editarea {
-    padding: 10px;
-    font-size: 1.2em;
-    letter-spacing: 1px; }
-  .container-editor .highlights {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    color: transparent; }
-    .container-editor .highlights::selection {
-      background-color: red;
-      color: #fff; }
-    .container-editor .highlights mark {
-      border-radius: 3px;
-      color: transparent;
-      background-color: #d4f5fd !important; }
-      .container-editor .highlights mark.error {
-        opacity: 1;
-        animation: blink .3s infinite alternate;
-        background-color: red !important; }
-      .container-editor .highlights mark > mark {
-        background-color: #a4e9fa !important; }
-        .container-editor .highlights mark > mark > mark {
-          background-color: #74ddf7 !important; }
-          .container-editor .highlights mark > mark > mark > mark {
-            background-color: #43d2f5 !important; }
-            .container-editor .highlights mark > mark > mark > mark > mark {
-              background-color: #13c6f2 !important; }
-  .container-editor .editarea {
-    /* display: block; */
-    position: absolute;
-    z-index: 2;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    color: #444;
-    background-color: transparent;
-    overflow: auto;
-    resize: none; }
+  position: relative;
+}
+.container-editor, .container-editor .backdrop, .container-editor .editarea {
+  font-family: var(--font-family-editor);
+  width: 100%;
+  height: 480px;
+}
+.container-editor .backdrop {
+  position: absolute;
+  z-index: 2;
+  background-color: #fff;
+  overflow: auto;
+  white-space: normal;
+  pointer-events: none;
+}
+.container-editor .highlights, .container-editor .editarea {
+  padding: 10px;
+  font-size: 1.2em;
+  letter-spacing: 1px;
+}
+.container-editor .highlights {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: transparent;
+}
+.container-editor .highlights::selection {
+  background-color: red;
+  color: #fff;
+}
+.container-editor .highlights mark {
+  border-radius: 3px;
+  color: transparent;
+  background-color: #d4f5fd !important;
+}
+.container-editor .highlights mark.error {
+  opacity: 1;
+  animation: blink 0.3s infinite alternate;
+  background-color: red !important;
+}
+.container-editor .highlights mark > mark {
+  background-color: #d4f5fd !important;
+}
+.container-editor .highlights mark > mark > mark {
+  background-color: #a4e9fa !important;
+}
+.container-editor .highlights mark > mark > mark > mark {
+  background-color: #74ddf7 !important;
+}
+.container-editor .highlights mark > mark > mark > mark > mark {
+  background-color: #43d2f5 !important;
+}
+.container-editor .highlights mark > mark > mark > mark > mark > mark {
+  background-color: #13c6f2 !important;
+}
+.container-editor .highlights mark > mark > mark > mark > mark > mark > mark {
+  background-color: #0ba2c7 !important;
+}
+.container-editor .highlights mark > mark > mark > mark > mark > mark > mark > mark {
+  background-color: #087b97 !important;
+}
+.container-editor .highlights mark > mark > mark > mark > mark > mark > mark > mark > mark {
+  background-color: #065366 !important;
+}
+.container-editor .editarea {
+  /* display: block; */
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  color: #444;
+  background-color: transparent;
+  overflow: auto;
+  resize: none;
+}
+
+/*# sourceMappingURL=demo.css.map */

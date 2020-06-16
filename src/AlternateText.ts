@@ -37,8 +37,8 @@ export class AlternatedText extends Array<ITextPart> implements ITextPart {
   public countVariants(): number {
     let res: number = 0;
     this.forEach((tp) => {
-      if (res <= 100000) // stop counting after reaching 100000
-        res += tp.countVariants();
+       // stop counting after reaching 100000
+      if (res <= 100000) res += tp.countVariants();
     });
     return res;
   }
